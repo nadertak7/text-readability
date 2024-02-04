@@ -123,16 +123,31 @@ class TextReadability:
         )
         return gunning_fog_index
 
-    def mclaughlin_smog_formula(self):
+    def mclaughlin_smog_formula(self) -> float:
         # Picks random sample of 30 sentences (or all sentences if < 30) in source text
         random_sample_30_sentences_list = random.sample(self.sentences, min(30, self.num_sentences))
         random_sample_30_sentences_string = ' '.join(str(element) for element in random_sample_30_sentences_list)
     
         # Calculates the number of words with more than two syllables
-        num_tokens_2plus_syllables = sum([1 for word in random_sample_30_sentences_string.split() if syllables.estimate(word) >= 2])
+        num_tokens_2plus_syllables = sum(1 for word in random_sample_30_sentences_string.split() if syllables.estimate(word) >= 2)
 
+        # Perform calculation
         mclaughlin_smog_score = (
             3
             + math.sqrt(num_tokens_2plus_syllables)
         )
         return mclaughlin_smog_score
+
+    def forcast_formula(self) -> float:
+        # Picks random sample of 150 words (or all words if < 150) in source text
+        random_sample_150_words_list = random.sample(self.source.split(), min(150, self.num_tokens))
+        
+        # Calculates number of monosyllabic words in sample
+        num_monosyllablic_tokens_sample = sum(1 for word in random_sample_150_words_list if syllables.estimate(word) == 1)
+
+        # Perform calculation
+        forcast_score = (
+            20
+            - (num_monosyllablic_tokens_sample / 10)
+        )
+        return forcast_score
