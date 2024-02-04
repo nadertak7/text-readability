@@ -32,9 +32,6 @@ class TextReadability:
         # Calculate total number of syllables
         self.total_syllables = syllables.estimate(source)
 
-        # Calculates the number of monosyllabic words
-        self.total_monosyllabic_words = sum(1 for word in source.split() if syllables.estimate(word) == 1)
-
     # Prints stats
     def print_stats(self) -> None:
         print(f"Total Words: {self.total_words}")
@@ -45,6 +42,7 @@ class TextReadability:
 
     # Flesch reading ease (original)
     def flesch_reading_ease_original(self) -> float:
+        # Perform calculation
         flesch_reading_ease_original_score = (
             206.835
             - (1015 * self.average_sentence_length)
@@ -54,15 +52,20 @@ class TextReadability:
 
     # Flesch reading ease (revised)
     def flesch_reading_ease_revised(self) -> float:
+        # Calculates the number of monosyllabic words
+        total_monosyllabic_words = sum(1 for word in self.source.split() if syllables.estimate(word) == 1)
+        
+        # Perform calculation
         flesch_reading_ease_revised_score = (
-            (1.599 * self.total_monosyllabic_words)
+            (1.599 * total_monosyllabic_words)
             - (1.015 * self.average_sentence_length)
             - 31.517
         )
         return flesch_reading_ease_revised_score
 
-    # Flesch-Kincaid grade level 
+    # Flesch-Kincaid grade level
     def flesch_kincaid_grade_level(self) -> float:
+        # Perform Calculation
         flesch_kincaid_grade_level = (
             (0.39 * (self.total_words / self.total_sentences))
             + (11.8 * (self.total_syllables / self.total_words))
@@ -70,7 +73,7 @@ class TextReadability:
         )
         return flesch_kincaid_grade_level
    
-    # Dale-Chall formula 
+    # Dale-Chall formula
     def dale_chall_formula(self) -> float():
         # Open file
         with open("./resources/dale-chall/dale-chall-wordlist.txt") as dale_chall_words:
@@ -86,7 +89,7 @@ class TextReadability:
         # Generate list of co-occurences (intersections)
         intersecting_tokens = source_lower_list_set.intersection(dale_chall_wordlist_set)
 
-        # Count intersections 
+        # Count intersections
         dale_chall_intersection_count = len(intersecting_tokens)
 
         # Perform Caluclation
@@ -96,3 +99,15 @@ class TextReadability:
             - (0.69 * self.average_sentence_length)
         )
         return dale_chall_formula_score
+
+    # Gunning Fog formula
+    def gunning_fog_formula(self) -> float:
+        # Calculates the number of bisyllabic words
+        total_bisyllabic_words = sum(1 for word in self.source.split() if syllables.estimate(word) >= 2)
+
+        # Perform Calculation
+        gunning_fog_index = (
+            0.4
+            * ((self.average_sentence_length + total_bisyllabic_words))
+        )
+        return gunning_fog_index
