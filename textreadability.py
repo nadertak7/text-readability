@@ -1,8 +1,15 @@
+# Import modules 
 import syllables
 import spacy
+import string
 
+# Define TextReadability class 
 class TextReadability:
     def __init__(self, source) -> None:
+        ## TODO : Error handling for source goes here 
+
+        self.source = source
+
         # Load the English language model
         nlp = spacy.load("en_core_web_sm")
 
@@ -62,7 +69,30 @@ class TextReadability:
             - 15.59
         )
         return flesch_kincaid_grade_level
+   
+    # Dale-Chall formula 
+    def dale_chall_formula(self) -> float():
+        # Open file
+        with open("./resources/dale-chall/dale-chall-wordlist.txt") as dale_chall_words:
+            dale_chall_wordlist = dale_chall_words.read().splitlines()
+       
+        # Convert source string to a lowercase list
+        source_lower_list = self.source.translate(str.maketrans('', '', string.punctuation))
+       
+        # Convert string and list to sets which will allow us to identify co-occurences
+        source_lower_list_set = set(source_lower_list.lower().split())
+        dale_chall_wordlist_set = set(dale_chall_wordlist)
 
-instance = TextReadability("hello dog woof. my name is nadr.")
+        # Generate list of co-occurences (intersections)
+        intersecting_tokens = source_lower_list_set.intersection(dale_chall_wordlist_set)
 
-instance.print_stats()
+        # Count intersections 
+        dale_chall_intersection_count = len(intersecting_tokens)
+
+        # Perform Caluclation
+        dale_chall_formula_score = (
+            64
+            - (0.95 * (self.total_words - dale_chall_intersection_count))
+            - (0.69 * self.average_sentence_length)
+        )
+        return dale_chall_formula_score
