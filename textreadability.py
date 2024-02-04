@@ -12,7 +12,7 @@ class TextReadability:
 
         self.source = source
 
-        # Load the English language model
+        # Load English language model
         nlp = spacy.load("en_core_web_sm")
 
         # Process text with spacy
@@ -35,8 +35,8 @@ class TextReadability:
         # Calculate total number of syllables
         self.num_syllables = syllables.estimate(source)
 
-        # Calculates the number of bisyllabic words
-        self.num_bisyllabic_tokens = sum(1 for word in self.source.split() if syllables.estimate(word) = 2)
+        # Calculate number of bisyllabic words
+        self.num_bisyllabic_tokens = sum(1 for word in self.source.split() if syllables.estimate(word) == 2)
 
         # Calculates the number of monosyllabic words
         self.num_monosyllabic_tokens = sum(1 for word in self.source.split() if syllables.estimate(word) == 1)
@@ -57,7 +57,6 @@ class TextReadability:
         for title, stat in stats_to_print.items():
             print(f"{title}: {stat}")
 
-    # Flesch reading ease (original)
     def flesch_reading_ease_original(self) -> float:
         # Perform calculation
         flesch_reading_ease_original_score = (
@@ -67,7 +66,6 @@ class TextReadability:
         )
         return flesch_reading_ease_original_score
 
-    # Flesch reading ease (revised)
     def flesch_reading_ease_revised(self) -> float:
         # Perform calculation
         flesch_reading_ease_revised_score = (
@@ -77,7 +75,6 @@ class TextReadability:
         )
         return flesch_reading_ease_revised_score
 
-    # Flesch-Kincaid grade level
     def flesch_kincaid_grade_level(self) -> float:
         # Perform Calculation
         flesch_kincaid_grade_level = (
@@ -86,8 +83,7 @@ class TextReadability:
             - 15.59
         )
         return flesch_kincaid_grade_level
-   
-    # Dale-Chall formula
+
     def dale_chall_formula(self) -> float:
         # Open file
         with open("./resources/dale-chall/dale-chall-wordlist.txt", encoding="utf8") as dale_chall_words:
@@ -114,7 +110,6 @@ class TextReadability:
         )
         return dale_chall_formula_score
 
-    # Gunning Fog formula
     def gunning_fog_formula(self) -> float:
         # Perform calculation
         gunning_fog_index = (
