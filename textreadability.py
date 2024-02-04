@@ -43,12 +43,19 @@ class TextReadability:
 
     # Prints stats
     def print_stats(self) -> None:
-        print(f"# Words: {self.num_tokens}")
-        print(f"# Sentences: {self.num_sentences}")
-        print(f"Avg Sentence Length: {self.average_sentence_length}")
-        print(f"# Syllables: {self.num_syllables}")
-        print(f"# Monosyllablic Words: {self.num_monosyllabic_tokens}")
-        print(f"# Bisyllabic Words: {self.num_bisyllabic_tokens}")
+        # Add which stats to print in dict
+        stats_to_print = {
+            '# Words': self.num_tokens,
+            '# Sentences': self.num_sentences,
+            'Avg Sentence Length': self.average_sentence_length,
+            '# Syllables': self.num_syllables,
+            '# Monosyllabic Words': self.num_monosyllabic_tokens,
+            '# Bisyllabic Words': self.num_bisyllabic_tokens
+        }
+
+        # Prints dict keys and values
+        for title, stat in stats_to_print.items():
+            print(f"{title}: {stat}")
 
     # Flesch reading ease (original)
     def flesch_reading_ease_original(self) -> float:
@@ -121,10 +128,11 @@ class TextReadability:
         random_sample_30_sentences_list = random.sample(self.sentences, min(30, self.num_sentences))
         random_sample_30_sentences_string = ' '.join(str(element) for element in random_sample_30_sentences_list)
     
-        total_words_2plus_syllables = sum([1 for word in random_sample_30_sentences_string.split() if syllables.estimate(word) >= 2])
+        # Calculates the number of words with more than two syllables
+        num_tokens_2plus_syllables = sum([1 for word in random_sample_30_sentences_string.split() if syllables.estimate(word) >= 2])
 
         mclaughlin_smog_score = (
             3
-            + math.sqrt(total_words_2plus_syllables)
+            + math.sqrt(num_tokens_2plus_syllables)
         )
         return mclaughlin_smog_score
