@@ -36,7 +36,7 @@ class TextReadability:
         self.num_syllables = syllables.estimate(source)
 
         # Calculates the number of bisyllabic words
-        self.num_bisyllabic_tokens = sum(1 for word in self.source.split() if syllables.estimate(word) >= 2)
+        self.num_bisyllabic_tokens = sum(1 for word in self.source.split() if syllables.estimate(word) = 2)
 
         # Calculates the number of monosyllabic words
         self.num_monosyllabic_tokens = sum(1 for word in self.source.split() if syllables.estimate(word) == 1)
