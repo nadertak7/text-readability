@@ -62,7 +62,7 @@ class TextReadability:
         # Perform calculation
         flesch_reading_ease_original_score = (
             206.835
-            - (1015 * self.average_sentence_length)
+            - (1.015 * self.average_sentence_length)
             - (84.6 * (self.num_syllables / self.num_tokens))
         )
         return flesch_reading_ease_original_score
