@@ -2,6 +2,7 @@
 import syllables
 import spacy
 import string
+import math
 
 # Define TextReadability class 
 class TextReadability:
@@ -31,6 +32,9 @@ class TextReadability:
 
         # Calculate total number of syllables
         self.total_syllables = syllables.estimate(source)
+
+        # Calculates the number of bisyllabic words
+        self.total_bisyllabic_words = sum(1 for word in self.source.split() if syllables.estimate(word) >= 2)
 
     # Prints stats
     def print_stats(self) -> None:
@@ -102,12 +106,17 @@ class TextReadability:
 
     # Gunning Fog formula
     def gunning_fog_formula(self) -> float:
-        # Calculates the number of bisyllabic words
-        total_bisyllabic_words = sum(1 for word in self.source.split() if syllables.estimate(word) >= 2)
-
         # Perform Calculation
         gunning_fog_index = (
             0.4
-            * ((self.average_sentence_length + total_bisyllabic_words))
+            * ((self.average_sentence_length + self.total_bisyllabic_words))
         )
         return gunning_fog_index
+
+    def mclaughlin_smog_formula(self):
+        # TODO : Calculate for only a sample of 30 sentences in string
+        mclaughlin_smog_score = ( 
+            3
+            + math.sqrt(self.total_bisyllabic_words)
+        )
+        return mclaughlin_smog_score
